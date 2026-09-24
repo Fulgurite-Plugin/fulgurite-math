@@ -1,7 +1,7 @@
 {
   "name": "fulgurite.math",
   "displayName": "Math",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add math syntax support to the editor: $inline$ and $$display$$ TeX",
   "repository": "https://github.com/Fulgurite-Plugin/fulgurite-math",
   "license": "MIT",
