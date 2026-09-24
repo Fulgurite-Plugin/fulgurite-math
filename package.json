@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Add math syntax support to the editor: $inline$ and $$display$$ TeX",
   "repository": "https://github.com/Fulgurite-Plugin/math",
+  "license": "MIT",
   "main": "main.js",
   "isDesktopOnly": false,
   "private": true,
