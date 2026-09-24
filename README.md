@@ -11,4 +11,4 @@ Rendering (KaTeX) is not there yet.
 
 ## Development
 
-See [api](https://github.com/Fulgurite-Plugin/api).
+See [api](https://github.com/Fulgurite-Plugin/fulgurite-api).
