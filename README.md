@@ -1,6 +1,6 @@
 # Math
 
-TeX math in [Fulgurite](https://github.com/Fulgurite-Plugin)'s editor: `$x^2$` within a line and `$$ … $$` blocks
+TeX math in [fulgurite](https://github.com/fulgurite-plugin)'s editor: `$x^2$` within a line and `$$ … $$` blocks
 across lines stand out like code while you type. Pandoc's rules decide what is math: `$5 and $6` stays money and `\$`
 is a dollar sign.
 
@@ -11,4 +11,4 @@ Rendering (KaTeX) is not there yet.
 
 ## Development
 
-See [api](https://github.com/Fulgurite-Plugin/fulgurite-api).
+See [api](https://github.com/fulgurite-plugin/fulgurite-api).
