@@ -10,15 +10,18 @@ const isDigit = (c: string | undefined) => c !== undefined && c >= "0" && c <= "
  *  ponytail: a `$` inside a code span or fence still counts; skip those when someone writes shell prompts in math notes. */
 function mathStyles(text: string): StyleRange[] {
   const out: StyleRange[] = []
+  // The next `$` and `\` by indexOf, a native scan: looking at every character in JS is slow in QuickJS (a note with a
+  // drawing's JSON is 150k of them), and so is its regex engine. Each is looked for again only once passed.
+  let dollar = text.indexOf("$")
+  let slash = text.indexOf("\\")
   let i = 0
   while (i < text.length) {
-    const c = text[i]
-    if (c === "\\") {
+    if (dollar >= 0 && dollar < i) dollar = text.indexOf("$", i)
+    if (slash >= 0 && slash < i) slash = text.indexOf("\\", i)
+    i = dollar < 0 ? slash : slash < 0 ? dollar : Math.min(dollar, slash)
+    if (i < 0) break
+    if (text[i] === "\\") {
       i += 2
-      continue
-    }
-    if (c !== "$") {
-      i++
       continue
     }
     if (text[i + 1] === "$") {

@@ -27,15 +27,16 @@ var __plugin = (() => {
   var isDigit = (c) => c !== void 0 && c >= "0" && c <= "9";
   function mathStyles(text) {
     const out = [];
+    let dollar = text.indexOf("$");
+    let slash = text.indexOf("\\");
     let i = 0;
     while (i < text.length) {
-      const c = text[i];
-      if (c === "\\") {
+      if (dollar >= 0 && dollar < i) dollar = text.indexOf("$", i);
+      if (slash >= 0 && slash < i) slash = text.indexOf("\\", i);
+      i = dollar < 0 ? slash : slash < 0 ? dollar : Math.min(dollar, slash);
+      if (i < 0) break;
+      if (text[i] === "\\") {
         i += 2;
-        continue;
-      }
-      if (c !== "$") {
-        i++;
         continue;
       }
       if (text[i + 1] === "$") {
