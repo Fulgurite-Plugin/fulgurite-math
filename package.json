@@ -2,14 +2,14 @@
   "name": "fulgurite.math",
   "displayName": "Math",
   "version": "0.1.2",
-  "description": "Add math syntax support to the editor: $inline$ and $$display$$ TeX",
+  "description": "TeX math: ```math blocks typeset by KaTeX, $inline$ and $$display$$ highlighted",
   "repository": "https://github.com/fulgurite-plugin/fulgurite-math",
   "license": "MIT",
   "main": "main.js",
   "isDesktopOnly": false,
   "private": true,
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --format=iife --global-name=__plugin --target=es2022 --outfile=main.js",
+    "build": "node build.mjs",
     "check": "tsc --noEmit",
     "preversion": "npm run check",
     "version": "npm run build && git add main.js",
@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "fulgurite": "github:fulgurite-plugin/fulgurite-api#v0.1.0",
+    "fulgurite": "github:fulgurite-plugin/fulgurite-api#v0.1.2",
+    "katex": "^0.18.9",
     "typescript": "^5.6.0"
   }
 }

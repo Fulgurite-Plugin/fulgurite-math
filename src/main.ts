@@ -1,6 +1,9 @@
-// TeX math syntax: `$x^2$` inline and `$$ … $$` display blocks are marked like code so they stand out while
-// you type. Rendering (KaTeX) belongs to hybrid rendering, when the editor hides markup on the lines you are not on.
+// TeX math: a ```math block (GitHub's) is typeset by KaTeX (src/page.ts, one HTML page the app draws in place and opens
+// full size on a click), and `$x^2$` inline and `$$ … $$` display math are marked like code so they stand out.
 import type { EditorView, Plugin, StyleRange } from "fulgurite"
+
+/** The page, put in by build.mjs. */
+declare const PAGE: string
 
 const isSpace = (c: string | undefined) => c === undefined || /\s/.test(c)
 const isDigit = (c: string | undefined) => c !== undefined && c >= "0" && c <= "9"
@@ -67,6 +70,7 @@ const plugin: Plugin = {
       { key: "inline", name: "Highlight inline math", description: "$x^2$ within a line", type: "toggle", default: true },
       { key: "display", name: "Highlight display math", description: "$$ … $$ blocks, across lines", type: "toggle", default: true },
     ])
+    ctx.editor.registerCodeBlock("math", PAGE)
     ctx.editor.registerExtension({
       styles(text) {
         const on = ctx.settings.values()
@@ -81,7 +85,20 @@ const plugin: Plugin = {
       view.moveCursor(start + open.length + inner.length)
     }
     ctx.commands.add({ id: "insert-inline", name: "Insert inline math", editorCallback: wrap("$", "$") })
-    ctx.commands.add({ id: "insert-block", name: "Insert math block", editorCallback: wrap("$$\n", "\n$$") })
+    ctx.commands.add({
+      id: "insert-block",
+      name: "Insert math block",
+      editorCallback(view) {
+        // A ```math block of the selection, on lines of its own, opened full size.
+        const [start, end] = view.selection ?? [view.cursor, view.cursor]
+        const tex = view.text.slice(start, end)
+        const fenced = "```math\n" + tex + (tex && !tex.endsWith("\n") ? "\n" : "") + "```"
+        const before = start === 0 || view.text[start - 1] === "\n" ? "" : "\n"
+        const after = view.text[end] === "\n" ? "" : "\n"
+        view.replace(start, end, before + fenced + after)
+        ctx.commands.execute("block.open", String(start + before.length + fenced.length))
+      },
+    })
   },
 }
 
