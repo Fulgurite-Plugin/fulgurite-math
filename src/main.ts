@@ -1,5 +1,6 @@
-// TeX math: a ```math block (GitHub's) is typeset by KaTeX (src/page.ts, one HTML page the app draws in place and opens
-// full size on a click), and `$x^2$` inline and `$$ … $$` display math are marked like code so they stand out.
+// TeX math: KaTeX (src/page.ts, one HTML page) typesets what the app draws in place with it: a ```math block (GitHub's)
+// and `$$ … $$` on lines of their own (opened full size on a click) and `$x^2$` in a line. While a line is edited its
+// TeX is marked like code so it stands out.
 import type { EditorView, Plugin, StyleRange } from "fulgurite"
 
 /** The page, put in by build.mjs. */

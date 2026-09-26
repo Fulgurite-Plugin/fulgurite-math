@@ -1,5 +1,6 @@
 // The page the app shows for a ```math block (main.ts registers it): the block's TeX typeset by KaTeX in the app's web
-// view. "view" draws it at the note's width; "edit" is the TeX over its rendering, saving it as the block's text.
+// view. "view" draws it at the note's width; "edit" is the TeX over its rendering, saving it as the block's text;
+// "inline" typesets `$x^2$` as it goes in a line of text, which the app draws in place of the TeX.
 import type { CodeBlockHost } from "fulgurite"
 import katex from "katex"
 import "katex/dist/katex.min.css"
@@ -7,7 +8,7 @@ import "katex/dist/katex.min.css"
 const host = (window as unknown as { fulgurite: CodeBlockHost }).fulgurite
 const root = document.getElementById("root")!
 // Errors show as the TeX in red, the message on hover. Commands that load or link things stay off (KaTeX's default).
-const render = (tex: string) => katex.render(tex, root, { displayMode: true, throwOnError: false })
+const render = (tex: string) => katex.render(tex, root, { displayMode: host.mode !== "inline", throwOnError: false })
 // flow-root: the formula's margins count in the height the app gives it.
 root.style.display = "flow-root"
 
@@ -26,6 +27,24 @@ if (host.mode === "edit") {
   document.body.prepend(input)
   render(input.value)
   input.focus()
+} else if (host.mode === "inline") {
+  // On nothing (the app trims the picture's sides), the formula's baseline in the middle of the height it says: the app
+  // puts that middle on the line's baseline.
+  document.documentElement.style.background = "transparent"
+  document.body.style.cssText = `margin: 0; overflow: hidden; background: transparent; color: ${host.dark ? "#fff" : "#000"}`
+  root.style.cssText = "display: inline-block; position: relative; padding: 0 2px; white-space: nowrap"   // one line, however narrow the frame
+  render(host.source)
+  const baseline = document.createElement("span")   // an empty inline block sits on the baseline
+  baseline.style.cssText = "display: inline-block; width: 0; height: 0"
+  root.append(baseline)
+  void root.offsetHeight
+  document.fonts.ready.then(() => {
+    const box = root.getBoundingClientRect()
+    const base = baseline.getBoundingClientRect().bottom - box.top
+    const half = Math.ceil(Math.max(base, box.height - base)) + 1
+    root.style.top = `${half - base}px`
+    host.resize(2 * half)
+  })
 } else {
   document.body.style.cssText = `margin: 0; overflow: hidden; color: ${host.dark ? "#fff" : "#000"}`
   if (host.source.trim()) {
