@@ -1,7 +1,7 @@
 {
   "name": "fulgurite.math",
   "displayName": "Math",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "TeX math typeset by KaTeX in place: ```math and $$ blocks, $inline$ in the line",
   "repository": "https://github.com/fulgurite-plugin/fulgurite-math",
   "license": "MIT",
